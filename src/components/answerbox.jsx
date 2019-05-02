@@ -4,11 +4,12 @@ class answerbox extends Component {
     constructor(props) {
         super(props)
     this.state = { 
-        word: wordlist[Math.floor((Math.random() * wordlist.length))],
+        word: '',
         definition: '',
         value: '',
         score: 0,
         partOfSpeech: '',
+        question: 1
      }
     this.handleChange = this.handleChange.bind(this);
     }
@@ -49,9 +50,30 @@ class answerbox extends Component {
      handleChange(event) {
         this.setState({value: event.target.value});
      }
+
+    startGame() {
+        const newWord = wordlist[Math.floor(Math.random() * wordlist.length)];
+        var index = wordlist.indexOf(newWord)
+        if (index > -1) {
+            wordlist.splice(index, 1);
+         }
+        console.log(wordlist)
+        this.setState({
+            word: newWord,
+        });
+        this.getDef(newWord);
+        this.getPOS(newWord)
+        this.setState(prevState => ({
+            question: prevState.question + 1,
+          }));
+    }
     checkAnswer() {
         if (this.state.value.toUpperCase() === this.state.word.toUpperCase()) {
             const newWord = wordlist[Math.floor(Math.random() * wordlist.length)];
+            var index = wordlist.indexOf(newWord)
+            if (index > -1) {
+                wordlist.splice(index, 1);
+         }
             this.setState({
                 word: newWord,
             });
@@ -68,10 +90,14 @@ class answerbox extends Component {
             
         }
 
-
     }
     skipQuestion() {
             const newWord = wordlist[Math.floor(Math.random() * wordlist.length)];
+            var index = wordlist.indexOf(newWord)
+             if (index > -1) {
+                 wordlist.splice(index, 1);
+         }
+            console.log(wordlist)
             this.setState({
                 word: newWord,
             });
@@ -80,6 +106,16 @@ class answerbox extends Component {
     }
 
     render() { 
+        if (this.state.question === 1) {
+            return(
+                <p>
+                    Welcome To Zit! <br></br> I will give you a words part of speech, first letter, and definiton.<br></br> See if you can guess the correct word
+                    <br></br>
+                    <button className="btn btn-primary"
+					onClick={this.startGame.bind(this)}>PLAY!</button>
+                </p>
+            )
+        }
         return ( 
             <div>
             <p>
@@ -98,7 +134,7 @@ class answerbox extends Component {
                     <button className="btn btn-primary"
                     onClick={this.skipQuestion.bind(this)}>Pass</button>
 					</div>
-            Your Score: {this.state.score}
+                    Your Score: {this.state.score}
             
             </div>
         
@@ -109,6 +145,6 @@ class answerbox extends Component {
     
 }
 
-var wordlist = ['poop','aardvark','cosine','banana']
+var wordlist = ['poop','aardvark','cosine','banana','baseball','cat','box','helmet','sandwich','remote','raisin','donut','lamp','sofa','pillow','college','football','television','axe','rock','bank','diamond','leather','lizzard','captain','table','foot','school','park','moustache','candle','fire','plant','marathon','duck','glasses','whisker','grape','flute','trumpet','slope','grandfather','medicine','money','bag','airport','dream','relationship','exit','break']
  
 export default answerbox;
