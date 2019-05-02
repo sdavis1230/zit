@@ -14,7 +14,7 @@ class answerbox extends Component {
     }
     
     getDef(newWord) {
-        var url = 'http://localhost:3210/definition';
+        var url = 'https://zitapp.herokuapp.com/definition';
         axios.get(url, {
             params: {
                  word: newWord
@@ -30,7 +30,7 @@ class answerbox extends Component {
         
     }
     getPOS(newWord) {
-        var url = 'http://localhost:3210/partOfSpeech';
+        var url = 'https://zitapp.herokuapp.com/partOfSpeech';
         axios.get(url, {
             params: {
                  word: newWord
