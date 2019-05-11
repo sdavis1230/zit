@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import swal from 'sweetalert';
 class answerbox extends Component {
     constructor(props) {
         super(props)
@@ -9,7 +10,9 @@ class answerbox extends Component {
         value: '',
         score: 0,
         partOfSpeech: '',
-        question: 1
+        question: 1,
+        answer: "correct",
+        prevWord: ''
      }
     this.handleChange = this.handleChange.bind(this);
     }
@@ -68,6 +71,11 @@ class answerbox extends Component {
           }));
     }
     checkAnswer() {
+
+        this.setState( {
+            value: ""
+        });
+
         if (this.state.value.toUpperCase() === this.state.word.toUpperCase()) {
             const newWord = wordlist[Math.floor(Math.random() * wordlist.length)];
             var index = wordlist.indexOf(newWord)
@@ -82,27 +90,43 @@ class answerbox extends Component {
         
             this.setState(prevState => ({
                 score: prevState.score + 1,
+                answer: "correct"
               }));
         } else {
+            
             this.setState(prevState => ({
                 score: prevState.score - 1,
+                answer: 'incorrect'
               }));
             
         }
 
     }
     skipQuestion() {
+
+        this.setState( {
+            value: "",
+            answer:'skipped'
+        });
+
             const newWord = wordlist[Math.floor(Math.random() * wordlist.length)];
             var index = wordlist.indexOf(newWord)
              if (index > -1) {
                  wordlist.splice(index, 1);
          }
-            console.log(wordlist)
+
             this.setState({
                 word: newWord,
+                prevWord: this.state.word
             });
             this.getDef(newWord);
             this.getPOS(newWord)
+    }
+
+    nextQuestion() {
+        this.setState({
+            answer: 'correct'
+        })
     }
 
     render() { 
@@ -116,11 +140,12 @@ class answerbox extends Component {
                 </p>
             )
         }
+        if (this.state.answer === 'correct') {
         return ( 
             <div>
             <p>
-                {this.state.partOfSpeech} beginning with the letter {this.state.word.charAt(0)}
-                <br></br> {this.state.definition}
+                {this.state.partOfSpeech} beginning with the letter {this.state.word.charAt(0).toUpperCase()}
+                <br></br> Definition: {this.state.definition}
             </p>
             
                     
@@ -140,6 +165,50 @@ class answerbox extends Component {
         
             
          );
+        }
+        if (this.state.answer === 'incorrect') {
+            return(
+            <div>
+            <p>
+                {this.state.partOfSpeech} beginning with the letter {this.state.word.charAt(0).toUpperCase()}
+                <br></br> Definition: {this.state.definition}
+            </p>
+
+            <p style={{ color: 'red' }}>Incorrect!</p>
+
+					<div className="form-group">
+		        	<input className="form-control" type="text" id="answer" value={this.state.value} onChange={this.handleChange}
+					placeholder="Your Answer"/>
+
+
+					<button className="btn btn-primary"
+					onClick={this.checkAnswer.bind(this)}>Submit</button>
+
+                    <button className="btn btn-primary"
+                    onClick={this.skipQuestion.bind(this)}>Pass</button>
+					</div>
+                    Your Score: {this.state.score}
+            
+            </div>
+        );
+        } if (this.state.answer === 'skipped') {
+            return(
+                <div>
+                    Correct answer was {this.state.prevWord}
+                    
+					<div className="form-group">
+
+					<button className="btn btn-primary"
+					onClick={this.nextQuestion.bind(this)}>Next Question!</button>
+
+					</div>
+                    Your Score: {this.state.score}
+            
+            </div>
+
+            );
+        }
+    
          
     }
     

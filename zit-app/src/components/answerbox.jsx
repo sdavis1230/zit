@@ -88,7 +88,14 @@ class answerbox extends Component {
             </p>
             
                     
-					<div className="form-group">
+            <form onSubmit={this.checkAnswer}>
+                <label>
+                 Name:
+                 <input type="text" value={this.state.value} onChange={this.handleChange} />
+                 </label>
+                <input type="submit" value="Submit" />
+            </form>
+                    {/* <div className="form-group">
 		        	<input className="form-control" type="text" id="answer" value={this.state.value} onChange={this.handleChange}
 					placeholder="Your Answer"/>
 
@@ -97,7 +104,7 @@ class answerbox extends Component {
 
                     <button className="btn btn-primary"
                     onClick={this.skipQuestion.bind(this)}>Pass</button>
-					</div>
+					</div> */}
             Your Score: {this.state.score}
             
             </div>
